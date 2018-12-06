@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -118,11 +119,31 @@ func (t *ThreadHandler) FetchPosts() {
 		}
 
 		t.Posts[post.No] = &Post{DateTime: post.Now, PostId: post.No, Content: post.Com, FileUrl: fileUrl}
+		postFile := fmt.Sprintf("posts/%s.json", strconv.Itoa(t.Posts[post.No].PostId))
+		if _, err := os.Stat(postFile); os.IsNotExist(err) {
+			post, _ := json.Marshal(t.Posts[post.No])
+			ioutil.WriteFile(postFile, post, 0644)
+		}
 	}
 }
 
 func (t *ThreadHandler) GetPost(postId int) *Post {
-	return t.Posts[postId]
+	// try from cache
+	if post, ok := t.Posts[postId]; ok {
+		return post
+	}
+
+	// try from fs
+	fileName := fmt.Sprintf("posts/%s.json", strconv.Itoa(postId))
+	if _, err := os.Stat(fileName); err == nil {
+		bytes, _ := ioutil.ReadFile(fileName)
+		post := Post{}
+		json.Unmarshal(bytes, &Post{})
+		return &post
+	}
+
+	// not found
+	return nil
 }
 
 func (t *ThreadHandler) StartWatcher() {
