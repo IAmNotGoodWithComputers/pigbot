@@ -19,3 +19,8 @@ func (s *SelfbanCommand) Exec(context *MessageContext) {
 	context.Session.ChannelMessageSend(context.Message.ChannelID,
 		fmt.Sprintf("<@%s> has been banned from the server", context.Message.Author.ID))
 }
+
+func (s *SelfbanCommand) Info() string {
+	return `**!selfban** [Alias: !sudoku]
+starts a nice game of sudoku`
+}

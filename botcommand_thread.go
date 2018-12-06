@@ -21,3 +21,7 @@ func (c *ThreadCommand) Exec(context *MessageContext) {
 	context.Session.ChannelMessage(context.Message.ChannelID,
 		context.BotRegistry.ThreadHandler.CurrentThread)
 }
+
+func (c *ThreadCommand) Info() string {
+	return ""
+}

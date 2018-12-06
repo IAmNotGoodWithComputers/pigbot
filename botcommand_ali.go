@@ -10,10 +10,9 @@ import (
 )
 
 type AliCommand struct {
-
 }
 
-func (a *AliCommand) Satisfies (context *MessageContext) bool {
+func (a *AliCommand) Satisfies(context *MessageContext) bool {
 	return strings.HasPrefix(context.Message.Content, "!ali")
 }
 
@@ -31,12 +30,12 @@ func (a *AliCommand) Exec(context *MessageContext) {
 	}
 
 	embed := &discordgo.MessageEmbed{
-		Author: &discordgo.MessageEmbedAuthor{},
-		Color:  0x00ff00, // Green
-		Fields: make([]*discordgo.MessageEmbedField, 0),
+		Author:    &discordgo.MessageEmbedAuthor{},
+		Color:     0x00ff00, // Green
+		Fields:    make([]*discordgo.MessageEmbedField, 0),
 		Thumbnail: &discordgo.MessageEmbedThumbnail{},
 		Title:     strings.Replace(context.Message.Content, "!ali ", "", 1),
-		URL: 	searchUrl,
+		URL:       searchUrl,
 	}
 
 	doc.Find("a.product").Each(func(i int, current *goquery.Selection) {
@@ -49,7 +48,7 @@ func (a *AliCommand) Exec(context *MessageContext) {
 
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name:   current.Text(),
-			Value:  "[Open on Ali Express](https:" + link +")",
+			Value:  "[Open on Ali Express](https:" + link + ")",
 			Inline: false,
 		})
 	})
@@ -62,4 +61,9 @@ func (a *AliCommand) Exec(context *MessageContext) {
 	}
 
 	context.Session.ChannelMessageSendEmbed(context.Message.ChannelID, embed)
+}
+
+func (a *AliCommand) Info() string {
+	return `**!ali [searchterm]**
+Search Ali Express for a specific search term`
 }

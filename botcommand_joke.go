@@ -39,3 +39,8 @@ func (h *JokeCommand) Exec(context *MessageContext) {
 
 	context.Session.ChannelMessageSend(context.Message.ChannelID, joke.Joke)
 }
+
+func (h *JokeCommand) Info() string {
+	return `**!joke**
+Gets a random joke from icanhazdadjoke`
+}

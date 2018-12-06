@@ -28,3 +28,8 @@ func (c *CatCommand) Exec(context *MessageContext) {
 
 	context.Session.ChannelMessageSendEmbed(context.Message.ChannelID, embed)
 }
+
+func (c *CatCommand) Info() string {
+	return `**!cat**
+Fetch a random cat image (everyone on the server will see a different cat image)`
+}

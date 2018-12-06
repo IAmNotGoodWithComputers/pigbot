@@ -44,6 +44,8 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 	messageHandler := CreateMessageHandler()
 	messageHandler.BotRegistry = registry
 
+	messageHandler.RegisterReceiver(new(AboutCommand))
+
 	messageHandler.RegisterReceiver(new(PostCommand))
 	messageHandler.RegisterReceiver(new(JokeCommand))
 	messageHandler.RegisterReceiver(new(CatCommand))
@@ -61,7 +63,6 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 
 	discord.Open()
 }
-
 
 func parseBotConfig() *BotConfig {
 	botConfig := BotConfig{}

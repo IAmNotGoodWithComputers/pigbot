@@ -35,3 +35,8 @@ func (h *AnswerCommand) Exec(context *MessageContext) {
 
 	context.Session.ChannelMessageSend(context.Message.ChannelID, answer)
 }
+
+func (h *AnswerCommand) Info() string {
+	return `**!answer [searchterm]**
+Search Wolfram Alpha for a specific search term`
+}

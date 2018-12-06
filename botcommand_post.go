@@ -86,3 +86,7 @@ func (h *PostCommand) Exec(context *MessageContext) {
 		os.Remove(fileName)
 	}
 }
+
+func (h *PostCommand) Info() string {
+	return ""
+}
