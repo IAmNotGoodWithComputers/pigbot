@@ -6,7 +6,6 @@ import (
 )
 
 type SelfbanCommand struct {
-
 }
 
 func (s *SelfbanCommand) Satisfies(context *MessageContext) bool {

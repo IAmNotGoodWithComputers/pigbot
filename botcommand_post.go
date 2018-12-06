@@ -34,7 +34,7 @@ func (h *PostCommand) Exec(context *MessageContext) {
 	fileName := ""
 	// download image
 	if post.FileUrl != "" {
-		fileName = strconv.Itoa(post.PostId)+".jpg"
+		fileName = strconv.Itoa(post.PostId) + ".jpg"
 
 		resp, _ := http.Get(post.FileUrl)
 		defer resp.Body.Close()
@@ -63,7 +63,7 @@ func (h *PostCommand) Exec(context *MessageContext) {
 	}
 
 	message := &discordgo.MessageSend{
-		Embed:embed,
+		Embed: embed,
 	}
 
 	if fileName != "" {
@@ -73,7 +73,7 @@ func (h *PostCommand) Exec(context *MessageContext) {
 		}
 		message.Files = []*discordgo.File{
 			&discordgo.File{
-				Name: fileName,
+				Name:   fileName,
 				Reader: f,
 			},
 		}
