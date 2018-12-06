@@ -17,7 +17,7 @@ func (a *AliCommand) Satisfies(context *MessageContext) bool {
 }
 
 func (a *AliCommand) Exec(context *MessageContext) {
-	searchUrl := "https://www.aliexpress.com/wholesale?catId=0&initiative_id=SB_20170201171227&SearchText=%s"
+	searchUrl := "https://www.aliexpress.com/wholesale?catId=0&SearchText=%s"
 	term := url.QueryEscape(strings.Replace(context.Message.Content, "!ali ", "", 1))
 
 	searchUrl = fmt.Sprintf(searchUrl, term)
