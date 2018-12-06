@@ -81,4 +81,8 @@ func (h *PostCommand) Exec(context *MessageContext) {
 
 	// post into #csg-reviews
 	context.Session.ChannelMessageSendComplex("491172628917256192", message)
+
+	if fileName != "" {
+		os.Remove(fileName)
+	}
 }
