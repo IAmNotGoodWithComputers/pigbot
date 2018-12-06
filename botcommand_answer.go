@@ -28,7 +28,8 @@ func (h *AnswerCommand) Exec(context *MessageContext) {
 	answer := string(answerBytes)
 
 	if answer == "" {
-		context.Session.ChannelMessageSend(context.Message.ChannelID, "there has been a problem with contacting Wolfram Alpha")
+		context.Session.ChannelMessageSend(context.Message.ChannelID,
+			"there has been a problem with contacting Wolfram Alpha")
 		return
 	}
 

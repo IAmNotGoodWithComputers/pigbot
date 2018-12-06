@@ -50,6 +50,7 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 	messageHandler.RegisterReceiver(new(AnswerCommand))
 	messageHandler.RegisterReceiver(new(ThreadCommand))
 	messageHandler.RegisterReceiver(new(SelfbanCommand))
+	messageHandler.RegisterReceiver(new(AliCommand))
 
 	discord.AddHandler(messageHandler.OnMessage)
 	discord.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
