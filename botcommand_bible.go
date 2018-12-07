@@ -25,20 +25,38 @@ func (b *BibleCommand) Exec(context *MessageContext) {
 	}
 }
 
+func fmtBook(msg []string) string {
+	if len(msg) == 3 {
+		return string(msg[1])
+	} else if len(msg) == 4 {
+		return fmt.Sprintf("%s-%s", msg[1], msg[2])
+	}
+	return ""
+}
+
+func fmtChpVrs(msg []string) []string {
+	if len(msg) == 3 {
+		return strings.Split(string(msg[2]), ":")
+	} else if len(msg) == 4 {
+		return strings.Split(string(msg[3]), ":")
+	}
+	return []string{}
+}
+
 func (b *BibleCommand) getBibleVerse(context *MessageContext) {
 	msg := strings.Split(context.Message.Content, " ")
-	msgBook := msg[1]
-	chpVrs := strings.Split(msg[2], ":")
-	if len(chpVrs) >= 2 {
+	msgBook := fmtBook(msg)
+	chpVrs := fmtChpVrs(msg)
+	if len(chpVrs) == 2 {
 		msgChpt := chpVrs[0]
 		msgVrs := chpVrs[1]
-
 		chpt, _ := strconv.ParseInt(msgChpt, 10, 32)
 		vrs, _ := strconv.ParseInt(msgVrs, 10, 32)
+
 		if chpt > 0 && vrs > 0 {
 			url := fmt.Sprintf("https://dailyverses.net/%s/%d/%d", msgBook, chpt, vrs)
 			resp, _ := http.Get(url)
-			if resp.Request.Response.StatusCode == 200 {
+			if resp.StatusCode == 200 {
 				doc, _ := goquery.NewDocumentFromReader(resp.Body)
 				htmlVerse, _ := doc.Find("div.bibleVerse").First().Html()
 				txt, _ := html2text.FromString(htmlVerse)
