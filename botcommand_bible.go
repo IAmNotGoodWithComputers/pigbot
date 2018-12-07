@@ -5,6 +5,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"jaytaylor.com/html2text"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -17,25 +18,35 @@ func (b *BibleCommand) Satisfies(context *MessageContext) bool {
 
 func (b *BibleCommand) Exec(context *MessageContext) {
 	msgLen := len(strings.Split(context.Message.Content, " "))
-	if msgLen > 1 {
+	if msgLen > 2 {
 		b.getBibleVerse(context)
-	} else {
+	} else if msgLen < 2 {
 		b.randomBibleVerse(context)
 	}
 }
 
 func (b *BibleCommand) getBibleVerse(context *MessageContext) {
-	msgBook := strings.Split(context.Message.Content, " ")[1]
-	msgChpt := strings.Split(strings.Split(context.Message.Content, " ")[2], ":")[0]
-	msgVrs := strings.Split(strings.Split(context.Message.Content, " ")[2], ":")[1]
+	msg := strings.Split(context.Message.Content, " ")
+	msgBook := msg[1]
+	chpVrs := strings.Split(msg[2], ":")
+	if len(chpVrs) >= 2 {
+		msgChpt := chpVrs[0]
+		msgVrs := chpVrs[1]
 
-	url := fmt.Sprintf("https://dailyverses.net/%s/%s/%s", msgBook, msgChpt, msgVrs)
-	resp, _ := http.Get(url)
-	doc, _ := goquery.NewDocumentFromReader(resp.Body)
-	htmlVerse, _ := doc.Find("div.bibleVerse").First().Html()
-	txt, _ := html2text.FromString(htmlVerse)
-	verse := strings.Split(txt, "(")[0]
-	context.Session.ChannelMessageSend(context.Message.ChannelID, verse)
+		chpt, _ := strconv.ParseInt(msgChpt, 10, 32)
+		vrs, _ := strconv.ParseInt(msgVrs, 10, 32)
+		if chpt > 0 && vrs > 0 {
+			url := fmt.Sprintf("https://dailyverses.net/%s/%d/%d", msgBook, chpt, vrs)
+			resp, _ := http.Get(url)
+			if resp.Request.Response.StatusCode == 200 {
+				doc, _ := goquery.NewDocumentFromReader(resp.Body)
+				htmlVerse, _ := doc.Find("div.bibleVerse").First().Html()
+				txt, _ := html2text.FromString(htmlVerse)
+				verse := strings.Split(txt, "(")[0]
+				context.Session.ChannelMessageSend(context.Message.ChannelID, verse)
+			}
+		}
+	}
 }
 
 func (b *BibleCommand) randomBibleVerse(context *MessageContext) {
