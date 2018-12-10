@@ -14,7 +14,8 @@ type BibleCommand struct {
 }
 
 func (b *BibleCommand) Satisfies(context *MessageContext) bool {
-	return strings.HasPrefix(context.Message.Content, "!bible")
+	return strings.HasPrefix(context.Message.Content, "!bible") &&
+		context.Message.GuildID != CSG_SERVERID
 }
 
 func (b *BibleCommand) Exec(context *MessageContext) {
