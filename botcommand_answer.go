@@ -9,6 +9,7 @@ import (
 )
 
 type AnswerCommand struct {
+	BotCommandBase
 }
 
 func (h *AnswerCommand) Satisfies(context *MessageContext) bool {
@@ -39,4 +40,8 @@ func (h *AnswerCommand) Exec(context *MessageContext) {
 func (h *AnswerCommand) Info() string {
 	return `**!answer [searchterm]**
 Search Wolfram Alpha for a specific search term`
+}
+
+func (h *AnswerCommand) CommandCategory() int {
+	return COMMAND_CATEGORY_PRODUCTIVE
 }

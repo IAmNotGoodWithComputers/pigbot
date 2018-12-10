@@ -5,6 +5,7 @@ import (
 )
 
 type ThreadCommand struct {
+	BotCommandBase
 }
 
 func (c *ThreadCommand) Satisfies(context *MessageContext) bool {
@@ -22,6 +23,6 @@ func (c *ThreadCommand) Exec(context *MessageContext) {
 		context.BotRegistry.ThreadHandler.CurrentThread)
 }
 
-func (c *ThreadCommand) Info() string {
-	return ""
+func (h *ThreadCommand) CommandCategory() int {
+	return COMMAND_CATEGORY_PRODUCTIVE
 }

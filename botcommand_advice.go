@@ -8,7 +8,9 @@ import (
 	"strings"
 )
 
-type AdviceCommand struct {}
+type AdviceCommand struct {
+	BotCommandBase
+}
 
 type Advice struct {
 	Slip struct{

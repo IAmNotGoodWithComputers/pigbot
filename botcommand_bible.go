@@ -10,6 +10,7 @@ import (
 )
 
 type BibleCommand struct {
+	BotCommandBase
 }
 
 func (b *BibleCommand) Satisfies(context *MessageContext) bool {

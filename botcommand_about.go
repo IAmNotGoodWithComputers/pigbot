@@ -5,6 +5,7 @@ import (
 )
 
 type AboutCommand struct {
+	BotCommandBase
 }
 
 func (c *AboutCommand) Satisfies(context *MessageContext) bool {
@@ -23,8 +24,4 @@ func (c *AboutCommand) Exec(context *MessageContext) {
 	}
 
 	context.Session.ChannelMessageSend(context.Message.ChannelID, message)
-}
-
-func (c *AboutCommand) Info() string {
-	return ""
 }

@@ -55,12 +55,13 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 	messageHandler.RegisterReceiver(new(AliCommand))
 	messageHandler.RegisterReceiver(new(AdviceCommand))
 	messageHandler.RegisterReceiver(new(BibleCommand))
+	messageHandler.RegisterReceiver(new(SetThresholdCommand))
 
 	discord.AddHandler(messageHandler.OnMessage)
 	discord.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
-		guild, _ := session.State.Guild(message.GuildID)
-		channel, _ := session.State.Channel(message.ChannelID)
-		go fmt.Println(fmt.Sprintf("[%s]-#%s (%s): %s", guild.Name, channel.Name, message.Author.Username, message.Content))
+		// guild, _ := session.State.Guild(message.GuildID)
+		// channel, _ := session.State.Channel(message.ChannelID)
+		// go fmt.Println(fmt.Sprintf("[%s]-#%s (%s): %s", guild.Name, channel.Name, message.Author.Username, message.Content))
 	})
 
 	discord.Open()

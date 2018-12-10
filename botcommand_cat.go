@@ -8,6 +8,7 @@ import (
 )
 
 type CatCommand struct {
+	BotCommandBase
 }
 
 func (c *CatCommand) Satisfies(context *MessageContext) bool {

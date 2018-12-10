@@ -10,6 +10,7 @@ import (
 )
 
 type AliCommand struct {
+	BotCommandBase
 }
 
 func (a *AliCommand) Satisfies(context *MessageContext) bool {
@@ -66,4 +67,8 @@ func (a *AliCommand) Exec(context *MessageContext) {
 func (a *AliCommand) Info() string {
 	return `**!ali [searchterm]**
 Search Ali Express for a specific search term`
+}
+
+func (a *AliCommand) CommandCategory() int {
+	return COMMAND_CATEGORY_PRODUCTIVE
 }

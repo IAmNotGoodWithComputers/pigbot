@@ -13,6 +13,7 @@ import (
 )
 
 type PostCommand struct {
+	BotCommandBase
 }
 
 func (h *PostCommand) Satisfies(context *MessageContext) bool {
@@ -89,4 +90,8 @@ func (h *PostCommand) Exec(context *MessageContext) {
 
 func (h *PostCommand) Info() string {
 	return ""
+}
+
+func (h *PostCommand) CommandCategory() int {
+	return COMMAND_CATEGORY_PRODUCTIVE
 }

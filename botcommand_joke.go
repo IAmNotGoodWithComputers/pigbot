@@ -9,6 +9,7 @@ import (
 )
 
 type JokeCommand struct {
+	BotCommandBase
 }
 
 type Joke struct {
