@@ -65,6 +65,9 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 	})
 
 	discord.Open()
+
+	redditWatcher := new(RedditWatcher)
+	redditWatcher.StartRedditWatcher(discord)
 }
 
 func parseBotConfig() *BotConfig {
