@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
+
+var sudokuVictimCounter int = 0
 
 type SelfbanCommand struct {
 	BotCommandBase
@@ -15,7 +18,10 @@ func (s *SelfbanCommand) Satisfies(context *MessageContext) bool {
 }
 
 func (s *SelfbanCommand) Exec(context *MessageContext) {
-	context.Session.GuildBanCreate(context.Message.GuildID, context.Message.Author.ID, 1)
+	sudokuVictimCounter ++;
+
+	context.Session.GuildMemberDeleteWithReason(context.Message.GuildID, context.Message.Author.ID,
+		fmt.Sprintf("Sudoku victim %s", strconv.Itoa(sudokuVictimCounter)))
 
 	context.Session.ChannelMessageSend(context.Message.ChannelID,
 		fmt.Sprintf("<@%s> has been banned from the server", context.Message.Author.ID))
