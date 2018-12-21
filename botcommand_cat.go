@@ -1,10 +1,9 @@
 package main
 
 import (
-	"bytes"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -24,29 +23,35 @@ func (c *CatCommand) Exec(context *MessageContext) {
 	fname := rnd + ".jpg"
 	url := "https://cataas.com/cat?" + rnd
 	img := fetchCatImg(fname, url)
-	uplImg(img)
-	println(img)
 
 	embed := &discordgo.MessageEmbed{
-		Author: &discordgo.MessageEmbedAuthor{},
-		Color:  0x00ff00, // Green
-		Fields: []*discordgo.MessageEmbedField{},
-		Image: &discordgo.MessageEmbedImage{
-			URL: url,
-		},
+		Author:    &discordgo.MessageEmbedAuthor{},
+		Color:     0x00ff00, // Green
+		Fields:    []*discordgo.MessageEmbedField{},
 		Thumbnail: &discordgo.MessageEmbedThumbnail{},
 		Title:     "Random Cat",
 	}
 
-	context.Session.ChannelMessageSendEmbed(context.Message.ChannelID, embed)
+	message := &discordgo.MessageSend{
+		Embed: embed,
+	}
+
+	f, _ := os.Open(img)
+	embed.Image = &discordgo.MessageEmbedImage{
+		URL: fmt.Sprintf("attachment://%s", fname),
+	}
+	message.Files = []*discordgo.File{
+		&discordgo.File{
+			Name:   fname,
+			Reader: f,
+		},
+	}
+
+	context.Session.ChannelMessageSendComplex(context.Message.ChannelID, message)
+	//context.Session.ChannelMessageSendEmbed(context.Message.ChannelID, embed)
 }
 
-func uplImg(img []byte) {
-	resp, _ := http.Post("https://api.imgur.com/3/upload", "text/plain; charset=UTF-8", bytes.NewBuffer(img))
-	println(resp)
-}
-
-func fetchCatImg(file string, url string) []byte {
+func fetchCatImg(file string, url string) string {
 	out, _ := os.Create("cats/" + file)
 	defer out.Close()
 
@@ -57,8 +62,8 @@ func fetchCatImg(file string, url string) []byte {
 	if err == nil {
 		println(err)
 	}
-	cat, _ := ioutil.ReadFile("cats/" + file)
-	return cat
+	//cat, _ := ioutil.ReadFile("cats/" + file)
+	return "cats/" + file
 }
 
 func (c *CatCommand) Info() string {
