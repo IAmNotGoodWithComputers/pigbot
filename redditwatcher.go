@@ -10,8 +10,8 @@ import (
 
 var postedUrls []string = make([]string, 0)
 
-var whiteList []string = []string{"mechanical", "keyboard", "ssd", "mouse"}
-var blackList []string = []string{"laptop", "prebuilt", "corsair", "steelseries", "logitech", "evga", "hyperx", "razer", "mousepad"}
+var whiteList []string = []string{"mechanical", "keyboard", "mouse"}
+var blackList []string = []string{"laptop", "prebuilt", "corsair", "steelseries", "logitech", "evga", "hyperx", "razer", "mousepad", "ssd"}
 
 type RedditWatcher struct {
 
