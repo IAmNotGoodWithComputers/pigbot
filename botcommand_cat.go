@@ -19,10 +19,7 @@ func (c *CatCommand) Satisfies(context *MessageContext) bool {
 }
 
 func (c *CatCommand) Exec(context *MessageContext) {
-	rnd := strconv.FormatInt(time.Now().UnixNano(), 10)
-	fname := rnd + ".jpg"
-	url := "https://cataas.com/cat?" + rnd
-	img := fetchCatImg(fname, url)
+	img, fname := fetchCatImg()
 
 	embed := &discordgo.MessageEmbed{
 		Author:    &discordgo.MessageEmbedAuthor{},
@@ -48,25 +45,27 @@ func (c *CatCommand) Exec(context *MessageContext) {
 	}
 
 	context.Session.ChannelMessageSendComplex(context.Message.ChannelID, message)
-	//context.Session.ChannelMessageSendEmbed(context.Message.ChannelID, embed)
+
+	f.Close()
+	os.Remove(img)
 }
 
-func fetchCatImg(file string, url string) string {
+func fetchCatImg() (string, string) {
+	rnd := strconv.FormatInt(time.Now().UnixNano(), 10)
+	file := rnd + ".jpg"
+	url := "https://cataas.com/cat?" + rnd
+
 	out, _ := os.Create("cats/" + file)
 	defer out.Close()
 
 	resp, _ := http.Get(url)
 	defer resp.Body.Close()
 
-	_, err := io.Copy(out, resp.Body)
-	if err == nil {
-		println(err)
-	}
-	//cat, _ := ioutil.ReadFile("cats/" + file)
-	return "cats/" + file
+	io.Copy(out, resp.Body)
+	return "cats/" + file, file
 }
 
 func (c *CatCommand) Info() string {
 	return `**!cat**
-Fetch a random cat image (everyone on the server will see a different cat image)`
+Fetch a random cat image (everyone on the server will see the same cat image)`
 }
