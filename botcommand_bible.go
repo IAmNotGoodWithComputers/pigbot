@@ -48,22 +48,24 @@ func fmtChpVrs(msg []string) []string {
 func (b *BibleCommand) getBibleVerse(context *MessageContext) {
 	msg := strings.Split(context.Message.Content, " ")
 	msgBook := fmtBook(msg)
-	chpVrs := fmtChpVrs(msg)
-	if len(chpVrs) == 2 {
-		msgChpt := chpVrs[0]
-		msgVrs := chpVrs[1]
-		chpt, _ := strconv.ParseInt(msgChpt, 10, 32)
-		vrs, _ := strconv.ParseInt(msgVrs, 10, 32)
+	if msgBook != "" {
+		chpVrs := fmtChpVrs(msg)
+		if len(chpVrs) == 2 {
+			msgChpt := chpVrs[0]
+			msgVrs := chpVrs[1]
+			chpt, _ := strconv.ParseInt(msgChpt, 10, 32)
+			vrs, _ := strconv.ParseInt(msgVrs, 10, 32)
 
-		if chpt > 0 && vrs > 0 {
-			url := fmt.Sprintf("https://dailyverses.net/%s/%d/%d", msgBook, chpt, vrs)
-			resp, _ := http.Get(url)
-			if resp.StatusCode == 200 {
-				doc, _ := goquery.NewDocumentFromReader(resp.Body)
-				htmlVerse, _ := doc.Find("div.bibleVerse").First().Html()
-				txt, _ := html2text.FromString(htmlVerse)
-				verse := strings.Split(txt, "(")[0]
-				context.Session.ChannelMessageSend(context.Message.ChannelID, verse)
+			if chpt > 0 && vrs > 0 {
+				url := fmt.Sprintf("https://dailyverses.net/%s/%d/%d", msgBook, chpt, vrs)
+				resp, _ := http.Get(url)
+				if resp.StatusCode == 200 {
+					doc, _ := goquery.NewDocumentFromReader(resp.Body)
+					htmlVerse, _ := doc.Find("div.bibleVerse").First().Html()
+					txt, _ := html2text.FromString(htmlVerse)
+					verse := strings.Split(txt, "(")[0]
+					context.Session.ChannelMessageSend(context.Message.ChannelID, verse)
+				}
 			}
 		}
 	}
