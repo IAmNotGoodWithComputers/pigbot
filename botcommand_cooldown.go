@@ -16,9 +16,13 @@ func (c *SetThresholdCommand) Satisfies(context *MessageContext) bool {
 }
 
 func (c *SetThresholdCommand) Exec(context *MessageContext) {
-	threshold := strings.Replace(context.Message.Content, "!cooldown ", "", -1)
-	threshold = strings.Trim(threshold, " \t\n!")
+	parts := strings.Split(context.Message.Content, " ")
+	if len(parts) != 3 {
+		context.Session.ChannelMessageSend(context.Message.ChannelID, "invalid parameters. Usage: !cooldown [!command] [seconds]")
+	}
 
+	threshold := strings.Trim(parts[3], " \t\n!")
+	command := strings.Trim(parts[3], " \t\n!")
 	intVal, err := strconv.Atoi(threshold)
 
 	if err != nil {
@@ -26,10 +30,10 @@ func (c *SetThresholdCommand) Exec(context *MessageContext) {
 		return
 	}
 
-	CSG_FUNCOMMAND_THROTTLE = int64(intVal)
+	SetCommandPolicy(command, context.Message.GuildID, intVal)
 
-	context.Session.ChannelMessageSend(context.Message.ChannelID, fmt.Sprintf("fun command cooldown set to %s seconds",
-		threshold))
+	context.Session.ChannelMessageSend(context.Message.ChannelID,
+		fmt.Sprintf("command cooldown for %s set to %s seconds", command, threshold))
 }
 
 func (c *SetThresholdCommand) CommandCategory() int {

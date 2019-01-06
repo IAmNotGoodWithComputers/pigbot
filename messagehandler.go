@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"strings"
 	"time"
 )
 
@@ -59,6 +61,20 @@ func (m *MessageHandler) RegisterReceiver(handler MessageReceiver) {
 }
 
 func (m *MessageHandler) OnMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
+	if !IsCommand(message.Content) || message.Author.Username == "fedora"{
+		return
+	}
+
+	if UserIsBlacklisted(message.Author.ID) {
+		fmt.Println("user is blacklisted")
+		return
+	}
+
+	if !CommandIsAllowed(strings.Split(message.Content, " ")[0], message.GuildID) {
+		fmt.Println("command not allowed")
+		return
+	}
+
 	context := &MessageContext{Session: session, Message: message, BotRegistry: m.BotRegistry}
 	for _, handler := range m.Receivers {
 		if handler.Satisfies(context) {

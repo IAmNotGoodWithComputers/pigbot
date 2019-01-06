@@ -17,7 +17,7 @@ type PostCommand struct {
 }
 
 func (h *PostCommand) Satisfies(context *MessageContext) bool {
-	return context.Message.ChannelID == "247482564070080532" && // only allow messages from moderator channel
+	return UserIsAdmin(context.Message.Author.ID) &&
 		strings.HasPrefix(context.Message.Content, "!post")
 }
 

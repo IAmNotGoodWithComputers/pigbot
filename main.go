@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"io/ioutil"
+	"strings"
 )
 
 type BotConfig struct {
@@ -50,12 +51,12 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 	messageHandler.RegisterReceiver(new(JokeCommand))
 	messageHandler.RegisterReceiver(new(CatCommand))
 	messageHandler.RegisterReceiver(new(AnswerCommand))
-	messageHandler.RegisterReceiver(new(ThreadCommand))
 	messageHandler.RegisterReceiver(new(SelfbanCommand))
 	messageHandler.RegisterReceiver(new(AliCommand))
 	messageHandler.RegisterReceiver(new(AdviceCommand))
 	messageHandler.RegisterReceiver(new(BibleCommand))
 	messageHandler.RegisterReceiver(new(SetThresholdCommand))
+	messageHandler.RegisterReceiver(new(DisallowCommand))
 
 	discord.AddHandler(messageHandler.OnMessage)
 	discord.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
@@ -66,8 +67,8 @@ func botInit(discord *discordgo.Session, config *BotConfig) {
 
 	discord.Open()
 
-	redditWatcher := new(RedditWatcher)
-	redditWatcher.StartRedditWatcher(discord)
+	//redditWatcher := new(RedditWatcher)
+	//redditWatcher.StartRedditWatcher(discord)
 }
 
 func parseBotConfig() *BotConfig {
@@ -87,4 +88,18 @@ func dieOnError(msg string, err error) {
 		fmt.Printf("%s: %+v", msg, err)
 		panic(err)
 	}
+}
+
+func IsCommand(command string) bool {
+	return strings.HasPrefix(command, "!")
+}
+
+func RemoveCommand(command, message string) string {
+	com := strings.Replace(message, fmt.Sprintf("!%s", command), "", -1)
+	com = strings.Trim(com, " \n\t")
+	return com
+}
+
+func ExtractUser(garbage string) {
+
 }
