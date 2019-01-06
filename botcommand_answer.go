@@ -33,6 +33,10 @@ func (h *AnswerCommand) Exec(context *MessageContext) {
 			"there has been a problem with contacting Wolfram Alpha")
 		return
 	}
+  if answer == "Wolfram|Alpha did not understand your input" {
+    context.Session.ChannelMessageDelete(context.Message.ChannelID, context.Message.ID)
+    return
+  }
 
 	context.Session.ChannelMessageSend(context.Message.ChannelID, answer)
 }
