@@ -12,7 +12,7 @@ type SetThresholdCommand struct {
 
 func (c *SetThresholdCommand) Satisfies(context *MessageContext) bool {
 	return strings.HasPrefix(context.Message.Content, "!cooldown") &&
-		context.Message.ChannelID == "247482564070080532"
+		UserIsAdmin(context.Message.Author.ID)
 }
 
 func (c *SetThresholdCommand) Exec(context *MessageContext) {
@@ -21,8 +21,8 @@ func (c *SetThresholdCommand) Exec(context *MessageContext) {
 		context.Session.ChannelMessageSend(context.Message.ChannelID, "invalid parameters. Usage: !cooldown [!command] [seconds]")
 	}
 
-	threshold := strings.Trim(parts[3], " \t\n!")
-	command := strings.Trim(parts[3], " \t\n!")
+	threshold := strings.Trim(parts[2], " \t\n!")
+	command := strings.Trim(parts[1], " \t\n!")
 	intVal, err := strconv.Atoi(threshold)
 
 	if err != nil {

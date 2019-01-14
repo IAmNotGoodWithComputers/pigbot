@@ -62,6 +62,7 @@ func (c *DisallowCommand) Exec(context *MessageContext) {
 		if ToggleUserBlacklist(userId) {
 			context.Session.ChannelMessageSend(context.Message.ChannelID,
 				"user has been removed from the blacklist")
+			return
 		} else {
 			context.Session.ChannelMessageSend(context.Message.ChannelID,
 				"could not change user blacklist status")
